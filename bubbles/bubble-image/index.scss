@@ -1,0 +1,241 @@
+@mixin box-shadow($shadows...) {
+  -webkit-box-shadow: $shadows;
+  box-shadow: $shadows;
+}
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  border-radius: $radius;
+}
+
+@mixin transform($transform) {
+  -webkit-transform: $transform;
+  transform: $transform;
+}
+
+@mixin transform-origin($origin) {
+  -webkit-transform-origin: $origin;
+  transform-origin: $origin;
+}
+
+// Bubble arrow
+$bubble-arrow-width: 8px;
+$bubble-arrow-height: 16px;
+$bubble-arrow-border-width: 12px;
+$bubble-arrow-top: 36px;
+
+$bubble-corner-radius: 8px;
+
+$bubble-container-background-color: #fff;
+$bubble-border-color: #aaa;
+
+/* Image bubble */
+.image-bubble {
+  position: relative;
+
+  /* Image bubble image */
+  img {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 3000;
+    display: block;
+    border-radius: $bubble-corner-radius;
+  }
+
+  /* Image bubble arrow mask */
+  .image-arrow-mask {
+    position: absolute;
+    z-index: 3001;
+    top: 0;
+    bottom: 0;
+    width: $bubble-arrow-width;
+
+    .image-arrow-invisible-space, .image-arrow {
+      position: absolute;
+      left: 0;
+      right: 0;
+    }
+
+    /* Image bubble arrow mask line */
+    .image-arrow-invisible-space {
+      background: $bubble-container-background-color;
+
+      &.image-arrow-top-space {
+        top: 0;
+        height: $bubble-arrow-top;
+      }
+
+      &.image-arrow-bottom-space {
+        top: $bubble-arrow-top + $bubble-arrow-height;
+        bottom: 0;
+      }
+    }
+
+    /* Image bubble arrow */
+    .image-arrow {
+      top: $bubble-arrow-top;
+      height: $bubble-arrow-height;
+      .image-arrow-border {
+        position: absolute;
+        background: $bubble-border-color;
+        height: 1px;
+        width: $bubble-arrow-border-width;
+        top: 50%;
+        @include transform(translate(0, -50%));
+      }
+    }
+
+    .image-arrow:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-top: $bubble-arrow-height/2 solid $bubble-container-background-color;
+      border-bottom: $bubble-arrow-height/2 solid $bubble-container-background-color;
+    }
+  }
+
+  /* Image bubble corner */
+  .image-corner-mask {
+    position: absolute;
+    z-index: 3001;
+    background: transparent;
+    overflow: hidden;
+    top: 0;
+    bottom: 0;
+
+    .image-corner {
+      position: absolute;
+      width: 2*$bubble-corner-radius;
+      height: 2*$bubble-corner-radius;
+      border-radius: $bubble-corner-radius;
+      background: transparent;
+      display: none;
+    }
+
+    /* Image bubble mask border */
+    .image-mask-border {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border-top: 1px solid $bubble-border-color;
+      border-bottom: 1px solid $bubble-border-color;
+      border-radius: $bubble-corner-radius;
+      &:before, &:after {
+        content: "";
+        position: absolute;
+        background: $bubble-border-color;
+        width: 1px;
+      }
+      &:before {
+        top: 0;
+        height: $bubble-arrow-top;
+      }
+      &:after {
+        top: $bubble-arrow-top + $bubble-arrow-height;
+        bottom: 0;
+      }
+    }
+  }
+
+  &.image-bubble-left {
+    .image-arrow-mask {
+      left: 0;
+      .image-arrow {
+        .image-arrow-border {
+          left: 0;
+          @include transform-origin(0 0);
+        }
+        .image-arrow-top-border {
+          @include transform(rotate(315deg));
+        }
+
+        .image-arrow-bottom-border {
+          @include transform(rotate(45deg));
+        }
+      }
+      .image-arrow:before {
+        border-right: $bubble-arrow-width solid transparent;
+      }
+    }
+
+    .image-corner-mask {
+      left: $bubble-arrow-width;
+      right: 0;
+
+      .image-corner-top-left {
+        display: block;
+        left: 0;
+        top: 0;
+        @include box-shadow(#{-$bubble-corner-radius} #{-$bubble-corner-radius} 0 0 $bubble-container-background-color);
+      }
+
+      .image-corner-bottom-left {
+        display: block;
+        left: 0;
+        bottom: 0;
+        box-shadow: #{-$bubble-corner-radius} #{$bubble-corner-radius} 0 0 $bubble-container-background-color;
+      }
+
+      .image-mask-border {
+        border-right: 1px solid $bubble-border-color;
+        &:before, &:after {
+          left: 0;
+        }
+      }
+    }
+  }
+
+  &.image-bubble-right {
+    .image-arrow-mask {
+      right: 0;
+      .image-arrow {
+        .image-arrow-border {
+          right: 0;
+          @include transform-origin(100% 0);
+        }
+        .image-arrow-top-border {
+          @include transform(rotate(45deg));
+        }
+
+        .image-arrow-bottom-border {
+          @include transform(rotate(315deg));
+        }
+      }
+      .image-arrow:before {
+        border-left: $bubble-arrow-width solid transparent;
+      }
+    }
+
+    .image-corner-mask {
+      left: 0;
+      right: $bubble-arrow-width;
+
+      .image-corner-top-right {
+        display: block;
+        right: 0;
+        top: 0;
+        @include box-shadow(#{$bubble-corner-radius} #{-$bubble-corner-radius} 0 0 $bubble-container-background-color);
+      }
+
+      .image-corner-bottom-right {
+        display: block;
+        right: 0;
+        bottom: 0;
+        box-shadow: #{$bubble-corner-radius} #{$bubble-corner-radius} 0 0 $bubble-container-background-color;
+      }
+
+      .image-mask-border {
+        border-left: 1px solid $bubble-border-color;
+        &:before, &:after {
+          right: 0;
+        }
+      }
+    }
+  }
+}
